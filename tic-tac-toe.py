@@ -62,13 +62,13 @@ def game(n):
         print(' '.join(playing_field[i]))
     winner = combination_check_X()
     if winner:
-        return 'Первый игрок победил!'
+        return
     second_player()
     for i in range(len(playing_field)):
         print(' '.join(playing_field[i]))
     winner = combination_check_0()
     if winner:
-        return 'Второй игрок победил!'
+        return
     if n > 5:
         stop = input('Если хотите закончить игру, введите любой символ, если хотите продолжить - нажмите "Пробел", затем "Ввод"')
         if stop == ' ':
