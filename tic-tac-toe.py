@@ -1,81 +1,47 @@
-def first_player():
-    i = int(input('ПЕРВЫЙ ИГРОК, укажите номер строки для поля, в которое хоитите поставить крестик.\n'))
+def player_turn(n):
+    i = int(input(f'{players[0][n].upper()}, укажите номер строки для поля, в которое хоитите поставить крестик.\n'))
     j = int(input('А теперь номер столбца\n'))
     if (i or j) not in range(1,4):
        print('Значения должны быть в диапазоне 1-3!')
-       return first_player()
+       return player_turn(n)
     elif playing_field[i][j] != '-':
         print('В поле уже есть значек! Выберите другое!')
-        return first_player()
+        return player_turn(n)
     else:
-        playing_field[i][j] = 'X'
+        playing_field[i][j] = players[1][n]
 
-def second_player():
-    i = int(input('ВТРОЙ ИГРОК, укажите номер строки для поля, в которое хоитите поставить нолик.\n'))
-    j = int(input('А теперь номер столбца\n'))
-    if (i or j) not in range(1,4):
-       print('Значения должны быть в диапазоне 1-3!')
-       return second_player()
-    elif playing_field[i][j] != '-':
-        print('В поле уже есть значек! Выберите другое!')
-        return second_player()
-    else:
-        playing_field[i][j] = '0'
-
-def combination_check_X():
+def combination_check(n):
     if any([
-        playing_field[1][1] == playing_field[1][2] == playing_field[1][3] == 'X',
-        playing_field[2][1] == playing_field[2][2] == playing_field[2][3] == 'X',
-        playing_field[3][1] == playing_field[3][2] == playing_field[3][3] == 'X',
-        playing_field[1][1] == playing_field[2][1] == playing_field[3][1] == 'X',
-        playing_field[1][2] == playing_field[2][2] == playing_field[3][2] == 'X',
-        playing_field[1][3] == playing_field[2][3] == playing_field[3][3] == 'X',
-        playing_field[1][1] == playing_field[2][2] == playing_field[3][3] == 'X',
-        playing_field[3][1] == playing_field[2][2] == playing_field[1][3] == 'X'
+        playing_field[1][1] == playing_field[1][2] == playing_field[1][3] == players[1][n],
+        playing_field[2][1] == playing_field[2][2] == playing_field[2][3] == players[1][n],
+        playing_field[3][1] == playing_field[3][2] == playing_field[3][3] == players[1][n],
+        playing_field[1][1] == playing_field[2][1] == playing_field[3][1] == players[1][n],
+        playing_field[1][2] == playing_field[2][2] == playing_field[3][2] == players[1][n],
+        playing_field[1][3] == playing_field[2][3] == playing_field[3][3] == players[1][n],
+        playing_field[1][1] == playing_field[2][2] == playing_field[3][3] == players[1][n],
+        playing_field[3][1] == playing_field[2][2] == playing_field[1][3] == players[1][n]
     ]):
-        winner = 'Первый игрок победил!'
+        winner = f'{players[0][n]} игрок победил!'
         print(winner)
     else:
         winner = None
     return winner
 
-def combination_check_0():
-    if any([
-        playing_field[1][1] == playing_field[1][2] == playing_field[1][3] == '0',
-        playing_field[2][1] == playing_field[2][2] == playing_field[2][3] == '0',
-        playing_field[3][1] == playing_field[3][2] == playing_field[3][3] == '0',
-        playing_field[1][1] == playing_field[2][1] == playing_field[3][1] == '0',
-        playing_field[1][2] == playing_field[2][2] == playing_field[3][2] == '0',
-        playing_field[1][3] == playing_field[2][3] == playing_field[3][3] == '0',
-        playing_field[1][1] == playing_field[2][2] == playing_field[3][3] == '0',
-        playing_field[3][1] == playing_field[2][2] == playing_field[1][3] == '0'
-    ]):
-        winner = 'Второй игрок победил!'
-        print(winner)
-    else:
-        winner = None
-    return winner
-
-def game(n):
-    first_player()
-    for i in range(len(playing_field)):
-        print(' '.join(playing_field[i]))
-    winner = combination_check_X()
-    if winner:
-        return
-    second_player()
-    for i in range(len(playing_field)):
-        print(' '.join(playing_field[i]))
-    winner = combination_check_0()
-    if winner:
-        return
-    if n > 5:
+def game(m):
+    for n in range(2):
+        player_turn(n)
+        for i in range(len(playing_field)):
+            print(' '.join(playing_field[i]))
+        winner = combination_check(n)
+        if winner:
+            return
+    if m >= 3:
         stop = input('Если хотите закончить игру, введите любой символ, если хотите продолжить - нажмите "Пробел", затем "Ввод"')
         if stop == ' ':
-            return game(n+2)
+            return game(m+1)
         else:
             return 'Игра завершена!'
-    return game(n+2)
+    return game(m+1)
 
 print('Играем в крестики-нолики!')
 print('Чтобы сделать ход, введите номер строки и номер столбца,')
@@ -88,10 +54,13 @@ playing_field = [
     ['2', '-', '-', '-'],
     ['3', '-', '-', '-'],
 ]
-n = 2
+
+players = (('Первый игрок', 'Второй игрок'), ('X', '0'))
+
+m = 1
 
 for i in range(len(playing_field)):
     print(' '.join(playing_field[i]))
 
-game(n)
+game(m)
 
